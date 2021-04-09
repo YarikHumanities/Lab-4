@@ -41,7 +41,7 @@ private:
 	FILE* outputFile;
 
 public:
-	
+	int rightSize;
 	Audio(const char* fileName) {
 		this->fileName;
 		audioFile = fopen(fileName, "rb");
@@ -52,7 +52,8 @@ public:
 			
 			fread(&RiffHeader, sizeof(RiffHeader), 1, audioFile);
 			fread(&firstSubchunck, sizeof(firstSubchunck), 1, audioFile);
-			int rightSize = secondSubchunck.size/firstSubchunck.blockAlign;
+			fread(&secondSubchunck, sizeof(secondSubchunck), 1, audioFile);
+			this->rightSize = secondSubchunck.size/firstSubchunck.blockAlign;
 			secondSubchunck.data = new int8_t[rightSize];
 			for (int i = 0; i < rightSize; i++)
 			{
@@ -79,10 +80,14 @@ public:
 		cout << "bitsPerSample: " << firstSubchunck.bitsPerSample << endl;
 		cout << "===========================" << endl;
 		cout << "Data: " << endl;
+		cout << "SecondSubChunckSize: " << secondSubchunck.size << endl;
+		cout << "SeconID: " << secondSubchunck.id << endl;
+		cout << "Data actuallly: " << endl;
 		for (int i = 0; i < rightSize; i++)
 		{
-			cout << secondSubchunck.data[i] << " ";
+			cout <<secondSubchunck.data[i]<< " ";
 		}
+		cout << endl;
 		cout << "===========================" << endl;
 	}
 	
