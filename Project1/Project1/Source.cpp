@@ -30,7 +30,7 @@ private:
 	{
 		char id[4];
 		int32_t size;
-		int8_t* data;
+		int16_t* data;
 	};
 	string fileName;
 	riff_header RiffHeader;
@@ -54,7 +54,8 @@ public:
 			fread(&firstSubchunck, sizeof(firstSubchunck), 1, audioFile);
 			fread(&secondSubchunck, sizeof(secondSubchunck), 1, audioFile);
 			this->rightSize = secondSubchunck.size/firstSubchunck.blockAlign;
-			secondSubchunck.data = new int8_t[rightSize];
+			secondSubchunck.data = new int16_t[rightSize];
+			
 			for (int i = 0; i < rightSize; i++)
 			{
 				fread(&secondSubchunck.data[i], firstSubchunck.blockAlign, 1, audioFile);
@@ -62,6 +63,35 @@ public:
 			
 			
 		}
+		//fclose(audioFile);
+	}
+	void resize(int k) {
+		int16_t* resizedData = new int16_t[rightSize * k];
+		for (int i = 0; i < rightSize; i++)
+		{
+			for (int j = 0; j < k; j++)
+			{
+				resizedData[k * i + j] = secondSubchunck.data[i];
+			}
+		}
+		secondSubchunck.size *= k;
+		RiffHeader.chunkSize = 36 + secondSubchunck.size;
+		delete[] secondSubchunck.data;
+		secondSubchunck.data = resizedData;
+	}
+	void saveTo(const char* fileName) {
+		ofstream writeTo;
+		writeTo.open(fileName, ios::binary);
+		writeTo.close();
+		FILE* output = fopen(fileName, "w");
+		fwrite(&RiffHeader, sizeof(RiffHeader), 1, output);
+		fwrite(&firstSubchunck, sizeof(firstSubchunck), 1, output);
+		fwrite(&secondSubchunck, sizeof(secondSubchunck), 1, output);
+		for (size_t i = 0; i < secondSubchunck.size / firstSubchunck.blockAlign; i++)
+		{
+			fwrite(&secondSubchunck.data[i], firstSubchunck.blockAlign, 1, output);
+		}
+		fclose(output);
 	}
 	void show_info() {
 		cout << "Riff header: " << endl;
@@ -102,6 +132,12 @@ int main() {
 	/*string name1 = "Sound_out.wav";
 	const char* fileName1 = name1.data();
 	audio.writeTo(fileName);*/
-	audio.show_info();
-
+	//audio.show_info();
+	int k = 1;
+	
+	string name2 = "output.wav";
+	const char* fileName2 = name2.data();
+	//audio.resize(k);
+	audio.saveTo(fileName2);
+	//audio.show_info();
 }
