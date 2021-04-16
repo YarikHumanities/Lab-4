@@ -7,7 +7,8 @@
 #include "string.h"
 using namespace std;
 
-class Audio {
+class Audio
+{
 private:
 	struct riff_header
 	{
@@ -49,18 +50,18 @@ public:
 			cout << "Error with audio file has occured";
 		}
 		else {
-			
+
 			fread(&RiffHeader, sizeof(RiffHeader), 1, audioFile);
 			fread(&firstSubchunck, sizeof(firstSubchunck), 1, audioFile);
 			fread(&secondSubchunck, sizeof(secondSubchunck), 1, audioFile);
-			this->rightSize = secondSubchunck.size/firstSubchunck.blockAlign;
+			this->rightSize = secondSubchunck.size / firstSubchunck.blockAlign;
 			secondSubchunck.data = new int8_t[rightSize];
 			for (int i = 0; i < rightSize; i++)
 			{
 				fread(&secondSubchunck.data[i], firstSubchunck.blockAlign, 1, audioFile);
 			}
-			
-			
+
+
 		}
 	}
 	void show_info() {
@@ -85,12 +86,12 @@ public:
 		cout << "Data actuallly: " << endl;
 		for (int i = 0; i < rightSize; i++)
 		{
-			cout <<secondSubchunck.data[i]<< " ";
+			cout << secondSubchunck.data[i] << " ";
 		}
 		cout << endl;
 		cout << "===========================" << endl;
 	}
-	
+
 };
 int main() {
 	string name = "input.wav";
