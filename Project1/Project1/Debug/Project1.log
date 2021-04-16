@@ -1,3 +1,4 @@
 ﻿  Source.cpp
-C:\Users\User\coding\Labs 1.2\Lab-4\Project1\Project1\Source.cpp(90,24): warning C4018: '<': signed/unsigned mismatch
+C:\Users\User\coding\Labs 1.2\Lab-4\Project1\Project1\Source.cpp(33,9): warning C4086: expected pragma parameter to be '1', '2', '4', '8', or '16'
+C:\Users\User\coding\Labs 1.2\Lab-4\Project1\Project1\Source.cpp(96,24): warning C4018: '<': signed/unsigned mismatch
   Project1.vcxproj -> C:\Users\User\coding\Labs 1.2\Lab-4\Project1\Debug\Project1.exe
