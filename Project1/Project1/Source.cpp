@@ -12,13 +12,13 @@ class Audio
 private:
 	struct riff_header
 	{
-		char chunkId[4];
+		int32_t chunkId;
 		int32_t chunkSize;
-		char format[4];
+		int32_t format;
 	};
 	struct first_subchunck
 	{
-		char id[4];
+		int32_t id;
 		int32_t size;
 		int16_t format,
 			channelsNumber;
@@ -29,7 +29,7 @@ private:
 	};
 	struct second_subchunck
 	{
-		char id[4];
+		int32_t id;
 		int32_t size;
 		int16_t* data;
 	};
@@ -54,14 +54,14 @@ public:
 			fread(&RiffHeader, sizeof(RiffHeader), 1, audioFile);
 			fread(&firstSubchunck, sizeof(firstSubchunck), 1, audioFile);
 			fread(&secondSubchunck, sizeof(secondSubchunck), 1, audioFile);
-<<<<<<< HEAD
-			this->rightSize = secondSubchunck.size / firstSubchunck.blockAlign;
-			secondSubchunck.data = new int8_t[rightSize];
-=======
+//<<<<<<< HEAD
+//			this->rightSize = secondSubchunck.size / firstSubchunck.blockAlign;
+//			secondSubchunck.data = new int8_t[rightSize];
+//=======
 			this->rightSize = secondSubchunck.size/firstSubchunck.blockAlign;
 			secondSubchunck.data = new int16_t[rightSize];
 			
->>>>>>> master
+//>>>>>>> master
 			for (int i = 0; i < rightSize; i++)
 			{
 				fread(&secondSubchunck.data[i], firstSubchunck.blockAlign, 1, audioFile);
@@ -143,7 +143,7 @@ int main() {
 	
 	string name2 = "output.wav";
 	const char* fileName2 = name2.data();
-	//audio.resize(k);
+	audio.resize(k);
 	audio.saveTo(fileName2);
 	//audio.show_info();
 }
