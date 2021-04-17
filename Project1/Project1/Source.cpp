@@ -10,12 +10,15 @@ using namespace std;
 class Audio
 {
 private:
+#pragma pack(push, 1)
 	struct riff_header
 	{
 		int32_t chunkId;
 		int32_t chunkSize;
 		int32_t format;
 	};
+#pragma pack(pop)
+#pragma pack(push, 2)
 	struct first_subchunck
 	{
 		int32_t id;
@@ -27,12 +30,15 @@ private:
 		int16_t blockAlign,
 			bitsPerSample;
 	};
+#pragma pack(pop)
+#pragma pack(push, 3)
 	struct second_subchunck
 	{
 		int32_t id;
 		int32_t size;
 		int16_t* data;
 	};
+#pragma pack(pop)
 	string fileName;
 	riff_header RiffHeader;
 	first_subchunck firstSubchunck;
@@ -42,6 +48,8 @@ private:
 	FILE* outputFile;
 
 public:
+	int16_t* newData;;
+	int32_t newSize;
 	int rightSize;
 	Audio(const char* fileName) {
 		this->fileName;
@@ -85,6 +93,33 @@ public:
 		delete[] secondSubchunck.data;
 		secondSubchunck.data = resizedData;
 	}
+	void interpolation(double k) {
+		this->newSize = this->secondSubchunck.size * k;
+		this->newData = new int16_t[this->newSize];
+		int temp;
+		int32_t x0, x1, y0, y1, y, x;
+		for (int i = 0; i < this->secondSubchunck.size/this->firstSubchunck.blockAlign; i++)
+		{
+			temp = i * k;
+			this->newData[temp] = this->secondSubchunck.data[i];
+		}
+		for (int i = 0; i < this->secondSubchunck.size / this->firstSubchunck.blockAlign-1; i++)
+		{
+			x0 = i * k;
+			x1 = (i + 1) * k;
+			y0 = this->newData[x0];
+			y1 = this->newData[x1];
+			temp = x1 - x0 - 1;
+			for (int j = 1; j < temp+1; j++)
+			{
+				y = ((y1 - y0) * j) / (x1 - x0) + y0;
+				x = j + x0;
+				this->newData[x] = y;
+			}
+		}
+		this->RiffHeader.chunkSize += this->newSize - this->secondSubchunck.size;
+		this->secondSubchunck.size = this->newSize;
+	}
 	void saveTo(const char* fileName) {
 		ofstream writeTo;
 		writeTo.open(fileName, ios::binary);
@@ -98,6 +133,21 @@ public:
 			fwrite(&secondSubchunck.data[i], firstSubchunck.blockAlign, 1, output);
 		}
 		fclose(output);
+	}
+	void saveTo_in_case_of_interpol(const char* fileName) {
+		ofstream writeTo;
+		writeTo.open(fileName, ios::binary);
+		writeTo.close();
+		FILE* output = fopen(fileName, "w");
+		fwrite(&RiffHeader, sizeof(RiffHeader), 1, output);
+		fwrite(&firstSubchunck, sizeof(firstSubchunck), 1, output);
+		fwrite(&secondSubchunck.id, sizeof(secondSubchunck.id), 1, output);
+		fwrite(&secondSubchunck.size, sizeof(secondSubchunck.size), 1, output);
+		for (int i = 0; i < this->secondSubchunck.size / this->firstSubchunck.blockAlign; i++) {
+			fwrite(&this->newData[i], sizeof(this->newData[i]), 1, output);
+		}
+		fclose(output);
+
 	}
 	void show_info() {
 		cout << "Riff header: " << endl;
@@ -143,7 +193,11 @@ int main() {
 	
 	string name2 = "output.wav";
 	const char* fileName2 = name2.data();
+<<<<<<< HEAD
 	audio.resize(k);
+=======
+	
+>>>>>>> master
 	audio.saveTo(fileName2);
-	//audio.show_info();
+	
 }
