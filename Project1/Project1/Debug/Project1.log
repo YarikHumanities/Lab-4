@@ -1,9 +1,8 @@
 ﻿  Source.cpp
-<<<<<<< HEAD
-G:\lab rep\Lab-4\Project1\Project1\Source.cpp(96,24): warning C4018: <: несоответствие типов со знаком и без знака
+G:\lab rep\Lab-4\Project1\Project1\Source.cpp(32,9): warning C4086: требуется параметр директивы pragma: "1", "2", "4", "8" или "16"
+G:\lab rep\Lab-4\Project1\Project1\Source.cpp(89,52): warning C4244: =: преобразование "double" в "int32_t", возможна потеря данных
+G:\lab rep\Lab-4\Project1\Project1\Source.cpp(95,22): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+G:\lab rep\Lab-4\Project1\Project1\Source.cpp(100,20): warning C4244: =: преобразование "double" в "int32_t", возможна потеря данных
+G:\lab rep\Lab-4\Project1\Project1\Source.cpp(101,26): warning C4244: =: преобразование "double" в "int32_t", возможна потеря данных
+G:\lab rep\Lab-4\Project1\Project1\Source.cpp(123,30): warning C4018: <: несоответствие типов со знаком и без знака
   Project1.vcxproj -> G:\lab rep\Lab-4\Project1\Debug\Project1.exe
-=======
-C:\Users\User\coding\Labs 1.2\Lab-4\Project1\Project1\Source.cpp(33,9): warning C4086: expected pragma parameter to be '1', '2', '4', '8', or '16'
-C:\Users\User\coding\Labs 1.2\Lab-4\Project1\Project1\Source.cpp(96,24): warning C4018: '<': signed/unsigned mismatch
-  Project1.vcxproj -> C:\Users\User\coding\Labs 1.2\Lab-4\Project1\Debug\Project1.exe
->>>>>>> master
