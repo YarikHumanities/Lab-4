@@ -59,7 +59,9 @@ public:
 
             fread(&RiffHeader, sizeof(RiffHeader), 1, audioFile);
             fread(&firstSubchunck, sizeof(firstSubchunck), 1, audioFile);
-            fread(&secondSubchunck, sizeof(secondSubchunck), 1, audioFile);
+            // fread(&secondSubchunck, sizeof(secondSubchunck), 1, audioFile);
+            fread(&secondSubchunck.id, sizeof(secondSubchunck.id), 1, audioFile);
+            fread(&secondSubchunck.size, sizeof(secondSubchunck.size), 1, audioFile);
             this->rightSize = secondSubchunck.size / firstSubchunck.blockAlign;
             secondSubchunck.data = new int16_t[rightSize];
             for (int i = 0; i < rightSize; i++)
@@ -119,7 +121,9 @@ public:
         FILE* output = fopen(fileName, "w");
         fwrite(&RiffHeader, sizeof(RiffHeader), 1, output);
         fwrite(&firstSubchunck, sizeof(firstSubchunck), 1, output);
-        fwrite(&secondSubchunck, sizeof(secondSubchunck), 1, output);
+        //fwrite(&secondSubchunck, sizeof(secondSubchunck), 1, output);
+        fwrite(&secondSubchunck.id, sizeof(secondSubchunck.id), 1, output);
+        fwrite(&secondSubchunck.size, sizeof(secondSubchunck.size), 1, output);
         for (size_t i = 0; i < secondSubchunck.size / firstSubchunck.blockAlign; i++)
         {
             fwrite(&secondSubchunck.data[i], firstSubchunck.blockAlign, 1, output);
@@ -132,8 +136,7 @@ public:
         writeTo.close();
         FILE* output = fopen(fileName, "w");
         fwrite(&RiffHeader, sizeof(RiffHeader), 1, output);
-        fwrite(&
-            firstSubchunck, sizeof(firstSubchunck), 1, output);
+        fwrite(&firstSubchunck, sizeof(firstSubchunck), 1, output);
         fwrite(&secondSubchunck.id, sizeof(secondSubchunck.id), 1, output);
         fwrite(&secondSubchunck.size, sizeof(secondSubchunck.size), 1, output);
 
@@ -183,17 +186,18 @@ int main() {
     cin >> choose;
     if (choose == 1) {
         cout << "Enter change value: ";
-        int k;
-        cin >> k;
+        int b;
+        cin >> b;
         string name2 = "output.wav";
-        audio.resize(k);
+        audio.resize(b);
         audio.saveTo(fileName2);
     }
-    else if (choose == 2) {
+    else if (choose == 2)
+    {
         cout << "Enter change value: ";
-        double k;
-        cin >> k;
-        audio.interpolation(k);
+        double n;
+        cin >> n;
+        audio.interpolation(n);
         audio.saveTo_in_case_of_interpol(fileName2);
     }
 }
